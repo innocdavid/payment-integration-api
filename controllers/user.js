@@ -59,4 +59,41 @@ const getUser = async (req, res) => {
     }
 }
 
-export { createUser, getUser, };
+const updateUser = async (req, res) => {
+    const errors = validationResult(req);
+
+    if (errors) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { id } = req.params;
+    const { email, password, firstName, lastName } = req.body;
+
+    try {
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: 'Invalid user id format' });
+        }
+
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.stats(404).json({ message: 'User not found' });
+        }
+
+        if (email) user.email = email;
+        if (password) {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            user.password = hashedPassword;
+        }
+        if (firstName) user.firstName = firstName;
+        if (lastName) user.lastName = lastName;
+
+        await user.save();
+        res.status(200).json({ data: user, message: 'User updated successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: err.message });
+    }
+}
+
+export { createUser, getUser, updateUser, };
