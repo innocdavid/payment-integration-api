@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import colors from 'colors';
 
 import connectDB from './config/db.js';
+import userRouter from './routes/user.js';
 
 const app = express();
 
@@ -16,6 +17,8 @@ app.use(morgan('tiny'));
 // connect db
 connectDB();
 
+// routes
+app.use('/api/', userRouter);
 
 app.get('/', async(req, res) => {
     res.status(200).json({ data, message: 'request successful' });
