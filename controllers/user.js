@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import { validateResult } from 'express-validator';
 import colors from 'colors';
 import User from '../models/user.js';
+import mongoose from 'mongoose';
 
 const createUser = async (req, res) => {
     const errors = validateResult(req);
@@ -30,6 +31,32 @@ const createUser = async (req, res) => {
     }
 }
 
+const getUser = async (req, res) => {
+    const errors = validateResult(req);
 
+    if (errors) {
+        return res.status(400).json({ errors: errors.array() });
+    }
 
-export { createUser, };
+    const userId = req.params.id;
+
+    try {
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ message: 'Invalid user id format' });
+        }
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({ data: user });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: err.message });
+    }
+}
+
+export { createUser, getUser, };
