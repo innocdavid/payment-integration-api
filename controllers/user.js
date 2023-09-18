@@ -1,12 +1,12 @@
 // import modules
 import bcrypt from 'bcrypt';
-import { validateResult } from 'express-validator';
+import { validationResult } from 'express-validator';
 import colors from 'colors';
 import User from '../models/user.js';
 import mongoose from 'mongoose';
 
 const createUser = async (req, res) => {
-    const errors = validateResult(req);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -32,7 +32,7 @@ const createUser = async (req, res) => {
 }
 
 const getUser = async (req, res) => {
-    const errors = validateResult(req);
+    const errors = validationResult(req);
 
     if (errors) {
         return res.status(400).json({ errors: errors.array() });
