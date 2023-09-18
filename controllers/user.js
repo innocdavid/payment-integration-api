@@ -38,14 +38,14 @@ const getUser = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const userId = req.params.id;
+    const { id } = req.params;
 
     try {
-        if (!mongoose.Types.ObjectId.isValid(userId)) {
+        if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: 'Invalid user id format' });
         }
 
-        const user = await User.findById(userId);
+        const user = await User.findById(id);
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
