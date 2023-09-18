@@ -96,4 +96,32 @@ const updateUser = async (req, res) => {
     }
 }
 
+const deleteUser = async (req, res) => {
+    const errors = validationResult(req);
+
+    if (errors) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { id } = req.params;
+
+    try {
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: 'Invalid user id format' });
+        }
+
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        await user.remove();
+        res.status(200).json({ message: 'User deleted successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).jsons({ message: err.message });
+    }
+}
+
 export { createUser, getUser, updateUser, };
