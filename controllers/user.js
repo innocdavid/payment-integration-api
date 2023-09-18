@@ -1,12 +1,12 @@
 // import modules
 import bcrypt from 'bcrypt';
-import { expressValidator } from 'express-validator';
+import { validateResult } from 'express-validator';
 import colors from 'colors';
 import User from '../models/user.js';
 
 const createUser = async (req, res) => {
-    const errors = expressValidator(req);
-    
+    const errors = validateResult(req);
+
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
@@ -29,5 +29,7 @@ const createUser = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
+
+
 
 export { createUser, };
