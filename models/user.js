@@ -12,6 +12,6 @@ const userSchema = new mongoose.Schema({
     timeSubscribed: { type: Date, },
 });
 
-const USER = mongoose.model('user', userSchema);
+const User = mongoose.model('user', userSchema);
 
-export default USER;
+export default User;
